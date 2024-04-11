@@ -26,7 +26,6 @@
     gap: 24px;/*컨테이너의 아들class는 contents이므로, contents와 h1타이틀과의 간격에만 해당된다.*/
 
     width: 380px;/*authentication-container의 화면 너비는 380px만큼*/
-    height: 523px;/*authentication-container의 화면 높이는 523px만큼*/
 }
 
 .authentication-title {
