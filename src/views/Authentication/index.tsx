@@ -1,5 +1,9 @@
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import './style.css';
+
+import SignInBackground from "assets/image/sign-in-background.png";
+import SignUpBackground from "assets/image/sign-up-background.png";
+import InputBox from "components/Inputbox";
 
 type AuthPage = 'sign-in' | 'sign-up'
 
@@ -11,13 +15,30 @@ interface Props {
 // 1.
 function SignIn( {onLinkClickHandler}: Props ) {
 
-    const onSignInButtonClickHandler = () => {
+    const [id, setId] = useState<string>('');
+    const [password, setPassword] = useState<string>('');
 
+    const onIdChangeHandler = (event:ChangeEvent<HTMLInputElement> ) => {
+        setId(event.target.value);
+    };
+
+    const onPasswordChangeHandler = (event:ChangeEvent<HTMLInputElement> ) => {
+        setPassword(event.target.value);
+    };
+
+    const onSignInButtonClickHandler = () => {
+        alert(`아이디: ${id} / 비밀번호: ${password}`);
+        setId('');
+        setPassword('');
+        alert(`아이디: ${id} / 비밀번호: ${password}`);
     };
 
     return (
         <div className="authentication-contents">
-            <div className="authentication-input-container"></div>
+            <div className="authentication-input-container">
+                <InputBox label="아이디" type="text" placeholder="아이디를 입력해 주세요." onChangeHandler={onIdChangeHandler} value={id} />
+                <InputBox label="비밀번호" type="password" placeholder="비밀번호를 입력해 주세요." onChangeHandler={onPasswordChangeHandler} value={password} />
+            </div>
             <div className="authentication-button-container">
                 <div className="primary-button full-width" onClick={onSignInButtonClickHandler}>로그인</div>
                 <div className="text-link" onClick={onLinkClickHandler}>회원가입</div>
@@ -64,9 +85,11 @@ export default function Authentication() {
     <SignIn onLinkClickHandler = {onLinkClickHandler} /> : 
     <SignUp onLinkClickHandler={onLinkClickHandler} />;
 
+    const imageBoxStyle = { backgroundImage: `url(${ page ==='sign-in'? SignInBackground: SignInBackground})` }
+
     return( 
     <div id="authentication-wrapper">
-        <div className="authentication-image-box"></div>
+        <div className="authentication-image-box" style={ { backgroundImage: `url(${ page ==='sign-in'? SignInBackground: SignInBackground})` } }></div>
         <div className="authentication-box">
             <div className="authentication-container">
                 <div className="authentication-title h1">{'임대 주택 가격서비스'}</div>
