@@ -7,6 +7,29 @@ import InputBox from "components/Inputbox";
 
 type AuthPage = 'sign-in' | 'sign-up'
 
+interface SnsContainerProps {
+    title: string;
+}
+
+function SnsContainer({title}: SnsContainerProps) {
+    
+    const onSnsButtonClickHandler = (type: 'kakao' | 'naver') => {
+        alert(type);
+    };
+
+    return (
+        <div>
+            <div className="authentication-sns-container">
+                <div className="sns-container-title label">{title}</div>
+                <div className="sns-button-container">
+                    <div className="sns-button kakao-button" onClick={() => onSnsButtonClickHandler('kakao')}></div>
+                    <div className="sns-button naver-button" onClick={() => onSnsButtonClickHandler('naver')}></div>
+                </div>
+            </div>
+        </div>
+    );
+}
+
 interface Props {
     // onLinkClickHandler의 함수가 매개변수는 비어있어서 (), 반환값이 없으므로 void.
     onLinkClickHandler: () => void
@@ -44,23 +67,34 @@ function SignIn( {onLinkClickHandler}: Props ) {
                 <div className="text-link" onClick={onLinkClickHandler}>회원가입</div>
             </div>
             <div className="short-divider"></div>
-            <div className="authentication-sns-container"></div>
+            <SnsContainer title="SNS 로그인" />
         </div>
     );
 }
 
 // 2.
 function SignUp ({onLinkClickHandler}: Props ) {
-    
+    const [id, setId] = useState<string>('');
+    const [idButtonStatus, setIdButtonStatus] = useState<boolean>(false);
+
+    const onIdChangeHandler = (event: ChangeEvent<HTMLInputElement> ) => {
+        const { value } = event.target;
+        setId(event.target.value);
+        setIdButtonStatus(id !== '');
+    };
+
     const onSignUpButtonClickHandler = () => {
 
-    }
+    };
     
     return (
         <div className="authentication-contents">
-            <div className="authentication-sns-container"></div>
+            <SnsContainer title="SNS 회원가입" />
             <div className="short-divider"></div>
-        <div className="authentication-input-container"></div>
+        <div className="authentication-input-container">
+            <InputBox label="아이디" type="text" value={id}  placeholder="아이디를 입력해주세요."
+             onChangeHandler={onIdChangeHandler} buttonTitle="중복확인" buttonStatus={idButtonStatus} />
+        </div>
         <div className="authentication-button-container">
             <div className="primary-button full-width" onClick={onLinkClickHandler}>회원가입</div>
             <div className="text-link" onClick={onLinkClickHandler}>로그인</div>

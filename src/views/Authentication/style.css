@@ -67,3 +67,11 @@
     gap: 16px; /*내부 요소인, kakao와naver버튼과의 간격 16px지정*/
 }
 
+.kakao-button {
+    background-image: url(../../assets/image/kakao-button.png);
+}
+
+.naver-button {
+    background-image: url(../../assets/image/naver-button.png);
+
+}
