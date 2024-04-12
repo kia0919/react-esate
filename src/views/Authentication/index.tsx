@@ -7,27 +7,38 @@ import SignUpBackground from 'assets/image/sign-up-background.png';
 import InputBox from "components/Inputbox";
 
 //                    type                    //
+// 페이지 타입을 로그인, 회원가입을 두 페이지를 나타냄.
 type AuthPage = 'sign-in' | 'sign-up';
 
 //                    interface                    //
+// SnsContainerProps인터페이스에 전달되는 속성이 title: string
 interface SnsContainerProps {
     title: string;
 }
 
 //                    component                    //
+// SnsContainer함수에 title속성을 받아오고, 위에서 정의한 SnsContainerProps을 가져옴
 function SnsContainer({ title }: SnsContainerProps) {
 
     //                    event handler                    //
+    // onSnsButtonClickHandler함수 정의에서 type매개변수를 받고, kakao, naver 두가지 문자열 값 중 하나를 가져야하고,
+    // 클릭시 선택한 버튼 타입이 무엇인지 alert로 알려준다.
     const onSnsButtonClickHandler = (type: 'kakao' | 'naver') => {
         alert(type);
     };
 
     //                    render                    //
+    // SnsContainer컴포넌트가 화면에 어케표시되는지 정의(렌더링), 
     return (
+    // return반환으로, authentication-sns-container 클래스를 가진 컨테이너
         <div className="authentication-sns-container">
+            {/* sns-container-title label 클래스에서 {title} 인터페이스 props에서 전달된 문자열 */}
             <div className="sns-container-title label">{title}</div>
+            {/* 소셜 버튼 컨테이너 */}
             <div className="sns-button-container">
+                {/* kakao 버튼을 클릭하면, onSnsButtonClickHandler함수를 호출하여 'kakao'가 전달됨  */}
                 <div className="sns-button kakao-button" onClick={() => onSnsButtonClickHandler('kakao')}></div>
+                {/* naver 버튼을 클릭하면, onSnsButtonClickHandler함수를 호출하여 'naver'가 전달됨 */}
                 <div className="sns-button naver-button" onClick={() => onSnsButtonClickHandler('naver')}></div>
             </div>
         </div>
@@ -35,28 +46,40 @@ function SnsContainer({ title }: SnsContainerProps) {
 }
 
 //                    interface                    //
+// Props에 전달되는 속성을 onLinkClickHandler함수로 받고,
+// 매개변수를 받지 않음, 반환을 비어있는 void로 반환
 interface Props {
     onLinkClickHandler: () => void
 }
 
 //                    component                    //
+// 부모 컴포넌트로부터 Props의 onLinkClickHandler함수를 받아온다.
 function SignIn({ onLinkClickHandler }: Props) {
 
     //                    state                    //
+    // 상태함수(id), 상태변경함수(setId)를 useState사용하여 타입과, 초기값을 설정
     const [id, setId] = useState<string>('');
+    // 상태함수(password), 상태변경함수(setPassword)를 useState사용하여 타입과, 초기값을 설정
     const [password, setPassword] = useState<string>('');
 
     //                    event handler                    //
+    // onIdChangeHandler함수: Id입력란을 변경 처리하고 입력란에 입력된 값을 id상태에 설정
     const onIdChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+        // id입력값이 변경할 때마다 해당 값을 상태로 리렌더링 한다.
         setId(event.target.value);
     };
 
+    // onPasswordChangeHandler함수: 비밀번호 입력란을 변경 처리, 비밀번호 입력란에 입력된 값을 비밀번호 상태에 설정
     const onPasswordChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+        // setPassword는 상태변경함수 이므로, 비밀번호 입력란이 변경될 때마다 해당 값을 상태로 리렌더링 한다.
         setPassword(event.target.value);
     };
 
+    // onSignInButtonClickHandler함수: 로그인 버튼이 클릭 되었을 때 호출하는 함수
     const onSignInButtonClickHandler = () => {
+        // alert로 입력된 id, password를 알림창으로 표시해줌
         alert(`아이디 : ${id} / 비밀번호 : ${password}`);
+        // Id, Password 입력 후 로그인 버튼 클릭 시 빈문자열로 초기화 됨
         setId('');
         setPassword('');
     };
