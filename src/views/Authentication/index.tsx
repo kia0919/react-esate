@@ -91,11 +91,23 @@ function SignUp({ onLinkClickHandler }: Props) {
     const [emailButtonStatus, setEmailButtonStatus] = useState<boolean>(false);
     const [authNumberButtonStatus, setAuthNumberButtonStatus] = useState<boolean>(false);
 
+    const[idIdCheck, setIdCheck] = useState<boolean>(false);
+    const[isEmailCheck, setEmailCheck] = useState<boolean>(false);
+    const[isAuthNumberCheck, setAuthNumberCheck] = useState<boolean>(false);
+
+
+    const isSignUpActive = isEmailCheck && isEmailCheck && isAuthNumberCheck && password && passwordCheck;
+    // primary-button full-width / disable-button full-width
+    // 'primary-button full-width' : 'disable-button full-width'
+    // '${isSignUpActive} ? 'primary' : 'disable'} -button fulll-width = 밑의 ? 뒤에 들어갈 수 있는 방법 
+    const signUpButtonClass = (isSignUpActive ? 'primary' : 'disable') + '-button full-width';
+
     //                    event handler                    //
     const onIdChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
         const { value } = event.target;
         setId(value);
         setIdButtonStatus(value !== '');
+        setIdCheck(false);
     };
 
     const onPasswordChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
@@ -112,32 +124,39 @@ function SignUp({ onLinkClickHandler }: Props) {
         const { value } = event.target;
         setEmail(value);
         setEmailButtonStatus(value !== '');
+        setEmailCheck(false);
     };
 
     const onAuthNumberChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
         const { value } = event.target;
         setAuthNumber(value);
         setAuthNumberButtonStatus(value !== '');
+        setAuthNumberCheck(false);
     };
 
     const onIdButtonClickHandler = () => {
         if(!idButtonStatus) return;
         alert(id);
+        setIdCheck(true);
     };
 
     const onEmailButtonClickHandler = () => {
         if(!emailButtonStatus) return;
         alert(email);
+        setEmailCheck(true);
     };
 
     const onAuthNumberButtonClickHandler = () => {
         if(!authNumberButtonStatus) return;
         alert(authNumber);
+        setAuthNumberCheck(true);
     };
 
     const onSignUpButtonClickHandler = () => {
-
+        if(!isSignUpActive) return;
+        alert('회원가입');
     };
+
 
     //                    render                    //
     return (
@@ -146,7 +165,7 @@ function SignUp({ onLinkClickHandler }: Props) {
             <div className="short-divider"></div>
             <div className="authentication-input-container">
 
-                <InputBox label="아이디" type="text" value={id} placeholder="아이디를 입력해주세요" onChangeHandler={onIdChangeHandler} buttonTitle="중복 확인" buttonStatus={idButtonStatus} onButtonClickHandler={onIdButtonClickHandler} />
+                <InputBox label="아이디" type="text" value={id} placeholder="아이디를 입력해주세요" onChangeHandler={onIdChangeHandler} buttonTitle="중복 확인" buttonStatus={idButtonStatus} onButtonClickHandler={onIdButtonClickHandler} error={false} message="사용 가능한 아이디 입니다." />
 
                 <InputBox label="비밀번호" type="password" value={password} placeholder="비밀번호를 입력해주세요" onChangeHandler={onPasswordChangeHandler} />
 
@@ -154,7 +173,10 @@ function SignUp({ onLinkClickHandler }: Props) {
 
                 <InputBox label="이메일" type="text" value={email} placeholder="이메일을 입력해주세요" onChangeHandler={onEmailChangeHandler} buttonTitle="이메일 인증" buttonStatus={emailButtonStatus} onButtonClickHandler={onEmailButtonClickHandler} />
 
+                {
+                isEmailCheck && 
                 <InputBox label="인증번호" type="text" value={authNumber} placeholder="인증번호 4자리를 입력해주세요" onChangeHandler={onAuthNumberChangeHandler} buttonTitle="인증 확인" buttonStatus={authNumberButtonStatus} onButtonClickHandler={onAuthNumberButtonClickHandler} />
+                }
 
             </div>
             <div className="authentication-button-container">
