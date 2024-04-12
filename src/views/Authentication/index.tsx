@@ -224,7 +224,7 @@ function SignUp({ onLinkClickHandler }: Props) {
             <div className="authentication-button-container">
                 <div className={signUpButtonClass} onClick={onSignUpButtonClickHandler}>회원가입</div>
                 <div className="text-link" onClick={onLinkClickHandler}>로그인</div>
-            </div>
+            </div>  
         </div>
     );
 }
