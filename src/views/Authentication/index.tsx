@@ -153,26 +153,38 @@ function SignUp({ onLinkClickHandler }: Props) {
     const signUpButtonClass = `${isSignUpActive ? 'primary' : 'disable'}-button full-width`;
 
     //                    event handler                    //
-    // 
+    // Id입력란이 변경될때 onIdChangeHandler함수 호출
     const onIdChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
         const { value } = event.target;
         setId(value);
+        // 입력란이 비어있는지
         setIdButtonStatus(value !== '');
+        // Id유효성 재검사
         setIdCheck(false);
-        setIdMessage('');
+        // Id입력란에 표시되는 메시지 초기화
+        setIdMessage('');   
     };
 
+    // 비밀번호 입력란 변경시 onPasswordChangeHandler함수 호출
     const onPasswordChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
+        // 입력한 비밀번호 값 가져 옴
         const { value } = event.target;
+        // setPassword은 상태변경함수로 패스워드 값이 변경될때마다 업데이트함
         setPassword(value);
 
+        // 비밀번호 정규식 설정
         const passwordPattern = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,13}$/;
+        // 정규식과 입력된 문자열이 일치하는지 여부확인
         const isPasswordPattern = passwordPattern.test(value);
+        // isPasswordPattern이 참이면 빈 문자열 반환, 아니면 '영문, 숫자를 혼용하여 8 ~ 13자 입력해주세요.' 반환,
+        // 비밀번호 입력값이 존재하지 않으면 빈문자열 반환.
         const passwordMessage = 
             isPasswordPattern ? '' : 
             value ? '영문, 숫자를 혼용하여 8 ~ 13자 입력해주세요.' : '';
+        // 상태변경함수로 비밀번호 값이 바뀔때 표시되는 메시지 반환
         setPasswordMessage(passwordMessage);
         
+        // 
         const isEqualPassword = passwordCheck === value;
         const passwordCheckMessage = 
             isEqualPassword ? '' : 
