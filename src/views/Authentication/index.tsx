@@ -14,21 +14,22 @@ type AuthPage = 'sign-in' | 'sign-up';
 // SnsContainerProps인터페이스에 전달되는 속성이 title: string
 interface SnsContainerProps {
     title: string;
-}
+}   
 
 //                    component                    //
-// SnsContainer함수에 title속성을 받아오고, 위에서 정의한 SnsContainerProps을 가져옴
+// 소셜 로그인 버튼을 클릭했을 때의 기능 구현,
+// 인터페이스의 title 속성을 가지고 옴.
 function SnsContainer({ title }: SnsContainerProps) {
 
     //                    event handler                    //
     // onSnsButtonClickHandler함수 정의에서 type매개변수를 받고, kakao, naver 두가지 문자열 값 중 하나를 가져야하고,
-    // 클릭시 선택한 버튼 타입이 무엇인지 alert로 알려준다.
     const onSnsButtonClickHandler = (type: 'kakao' | 'naver') => {
+        // 클릭시 선택한 버튼 타입이 무엇인지 alert로 알려준다.
         alert(type);
     };
 
     //                    render                    //
-    // SnsContainer컴포넌트가 화면에 어케표시되는지 정의(렌더링), 
+    // SnsContainer컴포넌트가 화면에 어케표시되는지 정의(렌더링),
     return (
     // return반환으로, authentication-sns-container 클래스를 가진 컨테이너
         <div className="authentication-sns-container">
@@ -36,9 +37,9 @@ function SnsContainer({ title }: SnsContainerProps) {
             <div className="sns-container-title label">{title}</div>
             {/* 소셜 버튼 컨테이너 */}
             <div className="sns-button-container">
-                {/* kakao 버튼을 클릭하면, onSnsButtonClickHandler함수를 호출하여 'kakao'가 전달됨  */}
+                {/* kakao 버튼을 클릭하면, onSnsButtonClickHandler함수를 호출하여 'kakao'가 전달됨, 람다 함수 사용  */}
                 <div className="sns-button kakao-button" onClick={() => onSnsButtonClickHandler('kakao')}></div>
-                {/* naver 버튼을 클릭하면, onSnsButtonClickHandler함수를 호출하여 'naver'가 전달됨 */}
+                {/* naver 버튼을 클릭하면, onSnsButtonClickHandler함수를 호출하여 'naver'가 전달됨, 람다 함수 사용 */}
                 <div className="sns-button naver-button" onClick={() => onSnsButtonClickHandler('naver')}></div>
             </div>
         </div>
@@ -47,7 +48,7 @@ function SnsContainer({ title }: SnsContainerProps) {
 
 //                    interface                    //
 // Props에 전달되는 속성을 onLinkClickHandler함수로 받고,
-// 매개변수를 받지 않음, 반환을 비어있는 void로 반환
+// 매개변수를 받지 않음, void로 아무것도 반환하지 않는다
 interface Props {
     onLinkClickHandler: () => void
 }
@@ -57,7 +58,7 @@ interface Props {
 function SignIn({ onLinkClickHandler }: Props) {
 
     //                    state                    //
-    // 상태함수(id), 상태변경함수(setId)를 useState사용하여 타입과, 초기값을 설정
+    // 상태함수(id), 상태변경함수(setId)를 useState사용하여 타입과, 초기값을 설정(useState로 상태 설정)
     const [id, setId] = useState<string>('');
     // 상태함수(password), 상태변경함수(setPassword)를 useState사용하여 타입과, 초기값을 설정
     const [password, setPassword] = useState<string>('');
@@ -85,16 +86,23 @@ function SignIn({ onLinkClickHandler }: Props) {
     };
 
     //                    render                    //
+    // 랜더링 하는 반환 값
     return (
         <div className="authentication-contents">
+            {/* 아이디, 비밀번호 입력란 컨테이너 */}
             <div className="authentication-input-container">
+                {/*  */}
                 <InputBox label="아이디" type="text" value={id} placeholder="아이디를 입력해주세요" onChangeHandler={onIdChangeHandler} />
                 <InputBox label="비밀번호" type="password" value={password} placeholder="비밀번호를 입력해주세요" onChangeHandler={onPasswordChangeHandler} />
             </div>
+            {/* 로그인 버튼, 회원가입 링크 */}
             <div className="authentication-button-container">
+                {/* 로그인 버튼 클릭 시 onSignInButtonClickHandler함수 호출 */}
                 <div className="primary-button full-width" onClick={onSignInButtonClickHandler}>로그인</div>
+                {/* 회원가입 링크 버튼 클릭 시 onLinkClickHandler함수 호출 */}
                 <div className="text-link" onClick={onLinkClickHandler}>회원가입</div>
             </div>
+            {/* SNS  로그인 */}
             <div className="short-divider"></div>
             <SnsContainer title="SNS 로그인" />
         </div>
@@ -102,37 +110,50 @@ function SignIn({ onLinkClickHandler }: Props) {
 }
 
 //                    component                    //
+// 회원가입 랜더링 컴포넌트
 function SignUp({ onLinkClickHandler }: Props) {
 
     //                    state                    //
+    // 상태 관리
+    // 사용자가(Id, password, passwordCheck, email, authnumber) 입력후 회원가입 버튼을 누르면 ('')으로 인해 초기화 됨
     const [id, setId] = useState<string>('');
     const [password, setPassword] = useState<string>('');
     const [passwordCheck, setPasswordCheck] = useState<string>('');
     const [email, setEmail] = useState<string>('');
     const [authNumber, setAuthNumber] = useState<string>('');
 
+    // useState<boolean>(false): 상태 변수를 생성하고, 초기 값으로 false를 전달하여 초기 버튼이 비활성화,
+    // idButtonStatus: 현재 버튼의 활성화 상태, setIdButtonStatus: 버튼 활성화 상태가 변경시 저장됨.
     const [idButtonStatus, setIdButtonStatus] = useState<boolean>(false);
     const [emailButtonStatus, setEmailButtonStatus] = useState<boolean>(false);
     const [authNumberButtonStatus, setAuthNumberButtonStatus] = useState<boolean>(false);
 
+    // 각 Id, Email, AuthNumber입력란에 유효성에 맞게 했는지 여부 확인,
+    // 초기값이 모두 false이므로 초기 상태는 유효성임 맞지 않음
     const [isIdCheck, setIdCheck] = useState<boolean>(false);
     const [isEmailCheck, setEmailCheck] = useState<boolean>(false);
     const [isAuthNumberCheck, setAuthNumberCheck] = useState<boolean>(false);
 
+    // 유효성 검사 결과 메시지를 화면에 표시
     const [idMessage, setIdMessage] = useState<string>('');
     const [passwordMessage, setPasswordMessage] = useState<string>('');
     const [passwordCheckMessage, setPasswordCheckMessage] = useState<string>('');
     const [emailMessage, setEmailMessage] = useState<string>('');
     const [authNumberMessage, setAuthNumberMessage] = useState<string>('');
 
+    // Id, Email, AythNumber입력란에 사용자가 입력한 텍스트에 오류가 있는지 검사
     const [isIdError, setIdError] = useState<boolean>(false);
     const [isEmailError, setEmailError] = useState<boolean>(false);
     const [isAuthNumberError, setAuthNumberError] = useState<boolean>(false);
 
+    // AND연산자로 id, email, authNumber, password, passwordCheck가 모두 유효성이 true여야 회원가입 버튼이 활성화 된다.
     const isSignUpActive = isIdCheck && isEmailCheck && isAuthNumberCheck && password && passwordCheck;
+    // isSignUpActive 값이 true이면 'primary'-button full-width` 지정되어 회원가입 버튼이 활성화,
+    // 값이 false이면 'disable'-button full-width`으로 지정되어 회원가입 버튼 비활성화(사용자가 필수 정보 입력하지 않았거나, 조건 미충족시)
     const signUpButtonClass = `${isSignUpActive ? 'primary' : 'disable'}-button full-width`;
 
     //                    event handler                    //
+    // 
     const onIdChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
         const { value } = event.target;
         setId(value);
