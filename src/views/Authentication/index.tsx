@@ -1,4 +1,3 @@
-
 import React, { ChangeEvent, useState } from "react";
 import "./style.css";
 
@@ -63,26 +62,39 @@ function SignIn({ onLinkClickHandler }: Props) {
     // 상태함수(password), 상태변경함수(setPassword)를 useState사용하여 타입과, 초기값을 설정
     const [password, setPassword] = useState<string>('');
 
+    const [message, setMessage] = useState<string>('');
+
     //                    event handler                    //
     // onIdChangeHandler함수: Id입력란을 변경 처리하고 입력란에 입력된 값을 id상태에 설정
     const onIdChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
         // id입력값이 변경할 때마다 해당 값을 상태로 리렌더링 한다.
         setId(event.target.value);
+        setMessage('');
+
     };
 
     // onPasswordChangeHandler함수: 비밀번호 입력란을 변경 처리, 비밀번호 입력란에 입력된 값을 비밀번호 상태에 설정
     const onPasswordChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
         // setPassword는 상태변경함수 이므로, 비밀번호 입력란이 변경될 때마다 해당 값을 상태로 리렌더링 한다.
         setPassword(event.target.value);
+        setMessage('');
     };
 
-    // onSignInButtonClickHandler함수: 로그인 버튼이 클릭 되었을 때 호출하는 함수
     const onSignInButtonClickHandler = () => {
-        // alert로 입력된 id, password를 알림창으로 표시해줌
-        alert(`아이디 : ${id} / 비밀번호 : ${password}`);
-        // Id, Password 입력 후 로그인 버튼 클릭 시 빈문자열로 초기화 됨
-        setId('');
-        setPassword('');
+        const ID = 'service123';
+        const PASSWORD = 'qwer1234';
+
+        const isSuccess = id === ID && password === PASSWORD;
+
+        if (isSuccess) {
+            setId('');
+            setPassword('');
+            alert('로그인 성공!');
+        }
+        else {
+            setMessage('로그인 정보가 일치하지 않습니다.');
+        }
+        
     };
 
     //                    render                    //
@@ -93,7 +105,7 @@ function SignIn({ onLinkClickHandler }: Props) {
             <div className="authentication-input-container">
                 {/*  */}
                 <InputBox label="아이디" type="text" value={id} placeholder="아이디를 입력해주세요" onChangeHandler={onIdChangeHandler} />
-                <InputBox label="비밀번호" type="password" value={password} placeholder="비밀번호를 입력해주세요" onChangeHandler={onPasswordChangeHandler} />
+                <InputBox label="비밀번호" type="password" value={password} placeholder="비밀번호를 입력해주세요" onChangeHandler={onPasswordChangeHandler} message={message} error />
             </div>
             {/* 로그인 버튼, 회원가입 링크 */}
             <div className="authentication-button-container">
@@ -131,6 +143,8 @@ function SignUp({ onLinkClickHandler }: Props) {
     // 각 Id, Email, AuthNumber입력란에 유효성에 맞게 했는지 여부 확인,
     // 초기값이 모두 false이므로 초기 상태는 유효성임 맞지 않음
     const [isIdCheck, setIdCheck] = useState<boolean>(false);
+    const [isPasswordPattern, setPasswordPattern] = useState<boolean>(false);
+    const [isEqualPassword, setEqualPassword] = useState<boolean>(false);
     const [isEmailCheck, setEmailCheck] = useState<boolean>(false);
     const [isAuthNumberCheck, setAuthNumberCheck] = useState<boolean>(false);
 
@@ -147,7 +161,7 @@ function SignUp({ onLinkClickHandler }: Props) {
     const [isAuthNumberError, setAuthNumberError] = useState<boolean>(false);
 
     // AND연산자로 id, email, authNumber, password, passwordCheck가 모두 유효성이 true여야 회원가입 버튼이 활성화 된다.
-    const isSignUpActive = isIdCheck && isEmailCheck && isAuthNumberCheck && password && passwordCheck;
+    const isSignUpActive = isIdCheck && isEmailCheck && isAuthNumberCheck && isPasswordPattern && isEqualPassword;
     // isSignUpActive 값이 true이면 'primary'-button full-width` 지정되어 회원가입 버튼이 활성화,
     // 값이 false이면 'disable'-button full-width`으로 지정되어 회원가입 버튼 비활성화(사용자가 필수 정보 입력하지 않았거나, 조건 미충족시)
     const signUpButtonClass = `${isSignUpActive ? 'primary' : 'disable'}-button full-width`;
@@ -162,7 +176,7 @@ function SignUp({ onLinkClickHandler }: Props) {
         // Id유효성 재검사
         setIdCheck(false);
         // Id입력란에 표시되는 메시지 초기화
-        setIdMessage('');   
+        setIdMessage('');
     };
 
     // 비밀번호 입력란 변경시 onPasswordChangeHandler함수 호출
@@ -176,6 +190,8 @@ function SignUp({ onLinkClickHandler }: Props) {
         const passwordPattern = /^(?=.*[a-zA-Z])(?=.*[0-9]).{8,13}$/;
         // 정규식과 입력된 문자열이 일치하는지 여부확인
         const isPasswordPattern = passwordPattern.test(value);
+        setPasswordPattern(isPasswordPattern);
+
         // isPasswordPattern이 참이면 빈 문자열 반환, 아니면 '영문, 숫자를 혼용하여 8 ~ 13자 입력해주세요.' 반환,
         // 비밀번호 입력값이 존재하지 않으면 빈문자열 반환.
         const passwordMessage = 
@@ -184,18 +200,25 @@ function SignUp({ onLinkClickHandler }: Props) {
         // 상태변경함수로 비밀번호 값이 바뀔때 표시되는 메시지 반환
         setPasswordMessage(passwordMessage);
         
-        // 
         const isEqualPassword = passwordCheck === value;
+        setEqualPassword(isEqualPassword);
+
+        // 
         const passwordCheckMessage = 
             isEqualPassword ? '' : 
             passwordCheck ? '비밀번호가 일치하지 않습니다.' : '';
         setPasswordCheckMessage(passwordCheckMessage);
     };
 
+
+
     const onPasswordCheckChangeHandler = (event: ChangeEvent<HTMLInputElement>) => {
         const { value } = event.target;
         setPasswordCheck(value);
+
         const isEqualPassword = password === value;
+        setEqualPassword(isEqualPassword);
+
         const passwordCheckMessage = 
             isEqualPassword ? '' : 
             value ? '비밀번호가 일치하지 않습니다.' : '';
@@ -280,7 +303,7 @@ function SignUp({ onLinkClickHandler }: Props) {
             <div className="authentication-button-container">
                 <div className={signUpButtonClass} onClick={onSignUpButtonClickHandler}>회원가입</div>
                 <div className="text-link" onClick={onLinkClickHandler}>로그인</div>
-            </div>  
+            </div>
         </div>
     );
 }
